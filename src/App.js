@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase'
 import './App.css';
+import logo from './icon.png';
 
 import InteractiveList from './components/InteractiveList';
 import ButtonAppBar from './components/ButtonAppBar';
-//import firebaseConnectionHandler from './app-config/firebase-connection-handler';
+import firebaseConnectionHandler from './app-config/firebase-connection-handler';
 import _ from 'lodash';
 
 // Initialize Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDtz51NeQQVzOHR-MqKfV4HCsZxURbNS-M",
-  authDomain: "panchos-4ad41.firebaseapp.com",
-  databaseURL: "https://panchos-4ad41.firebaseio.com",
-  projectId: "panchos-4ad41",
-  storageBucket: "panchos-4ad41.appspot.com",
-  messagingSenderId: "357706798263"
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConnectionHandler);
 
 class App extends Component {
 
@@ -44,7 +37,12 @@ class App extends Component {
           <ButtonAppBar title="PanchApp List" onLoginAction={this.loginActionCallback} />
         </header>
         <div className="App-container">
-          <InteractiveList panchos={this.state.panchos} />
+          <div className="App-logo-container">
+            <img src={logo} className="App-logo" alt="logo" />
+          </div>
+          <div className="App-list-container">
+            <InteractiveList panchos={this.state.panchos} />
+          </div>
         </div>
       </div>
     );

@@ -17,7 +17,7 @@ import _ from 'lodash';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    maxWidth: 752,
+    maxWidth: 1000,
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -65,7 +65,7 @@ class InteractiveList extends React.Component {
         </ListItemAvatar>
         <ListItemText
           primary={itemData.panchado}
-          secondary={itemData.reason }
+          secondary={itemData.reason + ' - ' + itemData.date}
         />
         <ListItemSecondaryAction>
           <IconButton aria-label="Delete">

@@ -7,7 +7,25 @@
 }
 
 .App-container {
+  display: inline-block;
   margin-left: 10%;
+  width: 90%
+}
+
+.App-logo-container {
+  float: left;
+  margin-top: 5px;
+  width: 5%;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 60px;
+}
+
+.App-list-container {
+  display: inline-block;
+  width: 95%;
 }
 
 @keyframes App-logo-spin {

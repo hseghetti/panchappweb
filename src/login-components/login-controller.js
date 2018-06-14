@@ -26,7 +26,8 @@ export default {
             let errorData = {
                 code: errorCode,
                 message: errorMessage,
-                credential: credential
+                credential: credential,
+                email: email
             };
     
             cb('', errorData);
