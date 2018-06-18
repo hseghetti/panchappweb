@@ -1,0 +1,20 @@
+.PanchoListPage-logo-container {
+    float: left;
+    margin-top: 5px;
+    width: 5%;
+}
+
+.PanchoListPage-logo {
+    animation: PanchoListPage-logo-spin infinite 20s linear;
+    height: 60px;
+}
+
+.PanchoListPage-list-container {
+    display: inline-block;
+    width: 95%;
+}
+
+@keyframes PanchoListPage-logo-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

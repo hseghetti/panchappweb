@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase'
 import './App.css';
-import logo from './icon.png';
 
-import InteractiveList from './components/InteractiveList';
 import ButtonAppBar from './components/ButtonAppBar';
 import firebaseConnectionHandler from './app-config/firebase-connection-handler';
 import _ from 'lodash';
+import PanchoListPage from './components/PanchoListPage';
+import PanchoAddPage from './components/PanchoAddPage';
 
 // Initialize Firebase
 const firebaseApp = firebase.initializeApp(firebaseConnectionHandler);
@@ -16,7 +16,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      panchos: []
+      panchos: [],
+      pageToRender: 'panchoListPage'
     };
 
     this.panchosRef = firebaseApp.database().ref('/panchos/');
@@ -34,19 +35,46 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <ButtonAppBar title="PanchApp List" onLoginAction={this.loginActionCallback} />
+          <ButtonAppBar {...this.getAppBarProps()} />
         </header>
         <div className="App-container">
-          <div className="App-logo-container">
-            <img src={logo} className="App-logo" alt="logo" />
-          </div>
-          <div className="App-list-container">
-            <InteractiveList panchos={this.state.panchos} />
-          </div>
+          {this.renderPage()}
         </div>
       </div>
     );
   }
+
+  renderPage = () => {
+    let pageToRender = {
+      panchoListPage: this.renderPachoListPage,
+      panchoAddPage: this.renderPachoAddPage
+    };
+
+    return pageToRender[this.state.pageToRender]();
+  }
+
+  renderPachoListPage = () => {
+    return <PanchoListPage panchos={this.state.panchos} />;
+  }
+
+  renderPachoAddPage = () => {
+    return <PanchoAddPage panchos={this.state.panchos} />;
+  }
+
+  getAppBarProps = () => {
+    return {
+      title: 'PanchApp',
+      onLoginAction: this.loginActionCallback,
+      onMenuAction: this.menuActionCallback
+    };
+  }
+
+  menuActionCallback = (page) => {
+    console.log('adadasd ', page)
+    this.setState({
+      pageToRender: page
+    });
+  } 
 
   listenForPanchodAdded = (panchosRef = this.panchosRef) => {
 
