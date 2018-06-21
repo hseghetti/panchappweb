@@ -21,6 +21,7 @@ class App extends Component {
     };
 
     this.panchosRef = firebaseApp.database().ref('/panchos/');
+    this.usersRef = firebaseApp.database().ref('/users/');
   }
 
   componentDidMount() {
@@ -45,20 +46,22 @@ class App extends Component {
   }
 
   renderPage = () => {
-    let pageToRender = {
+    const pages = {
+      default: this.renderPachoListPage,
       panchoListPage: this.renderPachoListPage,
       panchoAddPage: this.renderPachoAddPage
     };
+    const pageToRender = pages[this.state.pageToRender] || pages.default;
 
-    return pageToRender[this.state.pageToRender]();
+    return  pageToRender();
   }
 
   renderPachoListPage = () => {
-    return <PanchoListPage panchos={this.state.panchos} />;
+    return <PanchoListPage panchos={this.state.panchos} removePancho={this.removeFromFirebase} />;
   }
 
   renderPachoAddPage = () => {
-    return <PanchoAddPage panchos={this.state.panchos} />;
+    return <PanchoAddPage users={this.state.users} addToFirebase={this.addToFirebase} />;
   }
 
   getAppBarProps = () => {
@@ -70,7 +73,6 @@ class App extends Component {
   }
 
   menuActionCallback = (page) => {
-    console.log('adadasd ', page)
     this.setState({
       pageToRender: page
     });
@@ -91,7 +93,7 @@ class App extends Component {
 
         this.setState({
             panchos: items
-        });
+        }, this.loadUsersList);
     });
   };
 
@@ -112,10 +114,56 @@ getPanchos = () => {
       this.listenForPanchodAdded();
     } else {
       this.setState({
-        panchos: []
+        panchos: [],
+        users: []
       });
     }
   };
+
+  loadUsersList = () => {
+    const user = firebase.auth().currentUser;
+        let newUserRef;
+        this.usersRef.orderByChild('email').equalTo(user.email).on("value", function(snapshot) {
+            if (!snapshot.val()) {
+                newUserRef = this.usersRef.push({email: user.email, name: user.displayName}, (error) => {
+                    if (error) {
+                        console.log('user push failed ', error);
+                    } else {
+                        this.setUsersList(newUserRef);
+                    }
+                })
+            } else {
+                this.setUsersList(snapshot);
+            }
+        }.bind(this));
+  };
+
+  setUsersList = (userData) => {
+    this.usersRef.orderByChild('email').on("value", function(dataSnapshot) {
+        let items = [];
+        
+        dataSnapshot.forEach((child) => {      
+            items.push({
+                email: child.val().email,
+                name: child.val().name,
+                _key: child.key
+            });
+        })
+        
+        this.setState({
+            users: items,
+            userData: userData
+        });
+    }.bind(this));        
+  }
+
+  addToFirebase = (pancho) => {
+    this.panchosRef.push(pancho);
+  }
+
+  removeFromFirebase = (key) => {
+    this.panchosRef.child(key).remove();
+  }
 }
 
 export default App;

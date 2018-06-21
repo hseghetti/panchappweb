@@ -68,7 +68,7 @@ class InteractiveList extends React.Component {
           secondary={itemData.reason + ' - ' + itemData.date}
         />
         <ListItemSecondaryAction>
-          <IconButton aria-label="Delete">
+          <IconButton aria-label="Delete" onClick={this.props.removePancho.bind(this, itemData._key)}>
             <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>
@@ -89,7 +89,8 @@ class InteractiveList extends React.Component {
 
 InteractiveList.propTypes = {
   classes: PropTypes.object.isRequired,
-  panchos: PropTypes.array.isRequired
+  panchos: PropTypes.array.isRequired,
+  removePancho: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(InteractiveList);
