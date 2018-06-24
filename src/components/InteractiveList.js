@@ -68,7 +68,7 @@ class InteractiveList extends React.Component {
           secondary={itemData.reason + ' - ' + itemData.date}
         />
         <ListItemSecondaryAction>
-          <IconButton aria-label="Delete" onClick={this.props.removePancho.bind(this, itemData._key)}>
+          <IconButton aria-label="Delete" onClick={this.props.removePancho.bind(this, itemData)}>
             <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>

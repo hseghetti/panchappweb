@@ -70,8 +70,8 @@ class PanchoListPage extends Component {
         return dataToRender;
     };
     
-    onRemovePancho = (index) => {
-        this.setState({panchoToRemove: index});
+    onRemovePancho = (panchoToRemove) => {
+        this.setState({panchoToRemove: panchoToRemove});
     }
 
     handleModalNo = () => {
@@ -80,6 +80,7 @@ class PanchoListPage extends Component {
 
     handleModalYes = () => {
         const {panchoToRemove} = this.state;
+        
         if (panchoToRemove) {
             this.props.removePancho(panchoToRemove);
         }

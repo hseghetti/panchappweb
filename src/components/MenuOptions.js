@@ -32,6 +32,7 @@ class MenuOptions extends Component {
                 <Menu {...this.getMenuProps()}>
                     <MenuItem onClick={this.handleClose.bind(this, 'panchoListPage')}>Pancho List</MenuItem>
                     <MenuItem onClick={this.handleClose.bind(this, 'panchoAddPage')}>New Pancho</MenuItem>
+                    <MenuItem onClick={this.handleClose.bind(this, 'activityPage')}>Activity Log</MenuItem>
                 </Menu>
             </div>
         );

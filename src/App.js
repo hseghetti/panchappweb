@@ -7,6 +7,8 @@ import firebaseConnectionHandler from './app-config/firebase-connection-handler'
 import _ from 'lodash';
 import PanchoListPage from './components/PanchoListPage';
 import PanchoAddPage from './components/PanchoAddPage';
+import ActivityPage from './components/ActivityPage';
+import moment from 'moment';
 
 // Initialize Firebase
 const firebaseApp = firebase.initializeApp(firebaseConnectionHandler);
@@ -22,6 +24,7 @@ class App extends Component {
 
     this.panchosRef = firebaseApp.database().ref('/panchos/');
     this.usersRef = firebaseApp.database().ref('/users/');
+    this.activityRef = firebaseApp.database().ref('/activity/');
   }
 
   componentDidMount() {
@@ -49,7 +52,8 @@ class App extends Component {
     const pages = {
       default: this.renderPachoListPage,
       panchoListPage: this.renderPachoListPage,
-      panchoAddPage: this.renderPachoAddPage
+      panchoAddPage: this.renderPachoAddPage,
+      activityPage: this.renderActivityPage
     };
     const pageToRender = pages[this.state.pageToRender] || pages.default;
 
@@ -64,6 +68,18 @@ class App extends Component {
     return <PanchoAddPage users={this.state.users} addToFirebase={this.addToFirebase} />;
   }
 
+  renderActivityPage = () => {
+    var dataToRender = null;
+
+    if (this.state.activity) {
+      dataToRender = (<ActivityPage activity={this.getActivityData()} />);
+    } else {
+      this.getActivityData();
+    }
+
+    return dataToRender;
+  }
+
   getAppBarProps = () => {
     return {
       title: 'PanchApp',
@@ -76,13 +92,13 @@ class App extends Component {
     this.setState({
       pageToRender: page
     });
-  } 
+  }
 
   listenForPanchodAdded = (panchosRef = this.panchosRef) => {
 
     panchosRef.orderByKey().on('value', (dataSnapshot) => {
         let items = [];
-        dataSnapshot.forEach((child) => {      
+        dataSnapshot.forEach((child) => {
             items.push({
                 date: child.val().date,
                 panchado: child.val().panchado,
@@ -97,7 +113,26 @@ class App extends Component {
     });
   };
 
-getPanchos = () => {
+  listenForActivityAdded = (activityRef = this.activityRef) => {
+    activityRef.orderByKey().on('value', (dataSnapshot) => {
+        let items = [];
+        dataSnapshot.forEach((child) => {
+            items.push({
+                date: child.val().date,
+                blame: child.val().blame,
+                action: child.val().action,
+                panchoInfo: child.val().panchoInfo,
+                _key: child.key
+            });
+        });
+
+        this.setState({
+            activity: _.reverse(items)
+        });
+    });
+  };
+
+  getPanchos = () => {
     let panchos = {};
 
     if (_.isEmpty(this.state.panchos)) {
@@ -141,28 +176,61 @@ getPanchos = () => {
   setUsersList = (userData) => {
     this.usersRef.orderByChild('email').on("value", function(dataSnapshot) {
         let items = [];
-        
-        dataSnapshot.forEach((child) => {      
+
+        dataSnapshot.forEach((child) => {
             items.push({
                 email: child.val().email,
                 name: child.val().name,
                 _key: child.key
             });
         })
-        
+
         this.setState({
             users: items,
             userData: userData
         });
-    }.bind(this));        
+    }.bind(this));
+  }
+
+  getActivityData = () => {
+    let activity = [];
+
+    if (_.isEmpty(this.state.activity)) {
+        this.listenForActivityAdded(this.activityRef);
+    } else {
+      activity = this.state.activity;
+    }
+
+    return activity;
   }
 
   addToFirebase = (pancho) => {
+    var user = firebase.auth().currentUser;
+    var activityData = {
+      panchoInfo: pancho.panchado + ' - ' + pancho.reason,
+      action: 'added',
+      blame: user.displayName || user.email,
+      date: moment().toString()
+    };
+
     this.panchosRef.push(pancho);
+    this.addActivityRegistry(activityData);
   }
 
-  removeFromFirebase = (key) => {
-    this.panchosRef.child(key).remove();
+  removeFromFirebase = (panchoToRemove) => {
+    var user = firebase.auth().currentUser;
+    var activityData = {
+      panchoInfo: panchoToRemove.panchado + ' - ' + panchoToRemove.reason,
+      action: 'removed',
+      blame: user.displayName || user.email,
+      date: moment().toString()
+    };
+    this.panchosRef.child(panchoToRemove._key).remove();
+    this.addActivityRegistry(activityData);
+  }
+
+  addActivityRegistry = (data) => {
+    this.activityRef.push(data);
   }
 }
 
