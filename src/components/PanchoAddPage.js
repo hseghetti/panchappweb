@@ -37,20 +37,20 @@ class PanchoAddPage extends Component {
             <div className="PanchoAddPage">
                 <form className={classes.root} autoComplete="off">
                     <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="age-simple">Who was panched?</InputLabel>
+                        <InputLabel htmlFor="panched">Who was panched?</InputLabel>
                         <Select
                             value={this.state.panched}
                             onChange={this.handleSelectChange}
                             inputProps={{
-                                name: 'age',
-                                id: 'age-simple',
+                                name: 'panched',
+                                id: 'panched',
                             }}
                         >
                         {_.map(users, this.renderMenuItem)}
                         </Select>
                         <TextField
-                            id="name"
-                            label="Name"
+                            id="reason"
+                            label="Reason"
                             className={classes.textField}
                             value={this.state.reason}
                             onChange={this.handleInputChange}
@@ -69,7 +69,7 @@ class PanchoAddPage extends Component {
 
     renderMenuItem = (user, index) => {
         return (
-            <MenuItem value={user.name || user.email} key={index}>{user.name || user.email}</MenuItem>
+            <MenuItem value={index} key={index}>{user.name || user.email}</MenuItem>
         );
     };
 
@@ -107,11 +107,13 @@ class PanchoAddPage extends Component {
     };
 
     handleButtonClick = () => {
-        const {panched, reason} = this.state
+        const {panched, reason} = this.state;
+        const panchedData = this.props.users[panched];
 
         if (panched && reason) {
             this.props.addToFirebase({
-                panchado: panched,
+                panchado: panchedData.name || panchedData.email,
+                photoURL: panchedData.photoURL || '',
                 reason: reason,
                 date: moment().toString()
             });

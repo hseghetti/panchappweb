@@ -102,6 +102,7 @@ class App extends Component {
             items.push({
                 date: child.val().date,
                 panchado: child.val().panchado,
+                photoURL: child.val().photoURL,
                 reason: child.val().reason,
                 _key: child.key
             });
@@ -157,21 +158,37 @@ class App extends Component {
 
   loadUsersList = () => {
     const user = firebase.auth().currentUser;
-        let newUserRef;
-        this.usersRef.orderByChild('email').equalTo(user.email).on("value", function(snapshot) {
-            if (!snapshot.val()) {
-                newUserRef = this.usersRef.push({email: user.email, name: user.displayName}, (error) => {
-                    if (error) {
-                        console.log('user push failed ', error);
-                    } else {
-                        this.setUsersList(newUserRef);
-                    }
-                })
+    let newUserRef;
+
+    this.usersRef.orderByChild('email').equalTo(user.email).on("value", function(snapshot) {
+        if (!snapshot.val()) {
+            newUserRef = this.usersRef.push({email: user.email, name: user.displayName}, (error) => {
+                if (error) {
+                    console.log('user push failed ', error);
+                } else {
+                    this.setUsersList(newUserRef);
+                }
+            });
+        } else if (!this.hasCompleteProfile(snapshot.val())) {
+          let loggedInUserRef = this.usersRef.child(Object.keys(snapshot.val())[0]);
+
+          newUserRef = loggedInUserRef.update({photoURL: user.photoURL}, (error) => {
+            if (error) {
+                console.log('user push failed ', error);
             } else {
-                this.setUsersList(snapshot);
+                this.setUsersList(newUserRef);
             }
-        }.bind(this));
+          });
+
+        } else {
+            this.setUsersList(snapshot);
+        }
+    }.bind(this));
   };
+
+  hasCompleteProfile = (snapshotVal) => {
+    return (snapshotVal && snapshotVal.photoURL);
+  }
 
   setUsersList = (userData) => {
     this.usersRef.orderByChild('email').on("value", function(dataSnapshot) {
@@ -181,6 +198,7 @@ class App extends Component {
             items.push({
                 email: child.val().email,
                 name: child.val().name,
+                photoURL: child.val().photoURL,
                 _key: child.key
             });
         })
@@ -212,7 +230,6 @@ class App extends Component {
       blame: user.displayName || user.email,
       date: moment().toString()
     };
-
     this.panchosRef.push(pancho);
     this.addActivityRegistry(activityData);
   }

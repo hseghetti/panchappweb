@@ -31,7 +31,7 @@ class ButtonAppBar extends React.Component {
     componentDidMount() {
         this.updateLoginStatus();
     }
-    
+
     render() {
         const { classes, title } = this.props;
 
@@ -51,7 +51,6 @@ class ButtonAppBar extends React.Component {
     };
 
     onMenuAction = (page) => {
-        console.log(page)
         this.props.onMenuAction(page)
     };
 
@@ -74,12 +73,12 @@ class ButtonAppBar extends React.Component {
     };
 
     loginCallBack = (data) => {
-        this.updateLoginStatus(); 
+        this.updateLoginStatus();
         this.props.onLoginAction(data);
     };
 
     logoutCallBack = () => {
-        this.updateLoginStatus(); 
+        this.updateLoginStatus();
         this.props.onLoginAction();
     };
 

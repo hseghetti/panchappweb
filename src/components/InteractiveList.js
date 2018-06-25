@@ -10,8 +10,8 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
+import logo from '../icon.png';
 import _ from 'lodash';
 
 const styles = theme => ({
@@ -59,9 +59,7 @@ class InteractiveList extends React.Component {
     return (
       <ListItem key={itemData._key}>
         <ListItemAvatar>
-          <Avatar>
-            <FolderIcon />
-          </Avatar>
+          <Avatar alt="Panched" src={itemData.photoURL || logo}></Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={itemData.panchado}
@@ -78,7 +76,7 @@ class InteractiveList extends React.Component {
 
   renderListItems = () => {
     const listOfItems = [];
-    
+
     _.map(this.props.panchos, (item) => {
       listOfItems.push(this.renderListItem(item));
     });
