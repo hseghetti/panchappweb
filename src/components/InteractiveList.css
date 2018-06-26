@@ -1,0 +1,32 @@
+.InteractiveList-expired01 {
+    animation: InteractiveList-expired01-color infinite 5s linear;
+    border-radius: 10px;
+    box-shadow: 2px 2px 9px 2px #e0dddd;
+}
+
+@keyframes InteractiveList-expired01-color {
+    from { background:#fdf0f1; }
+    to { background:#f7bcbf; }
+}
+
+.InteractiveList-expired02 {
+    animation: InteractiveList-expired02-color infinite 5s linear;
+    border-radius: 10px;
+    box-shadow: 2px 2px 9px 2px #e0dddd;
+}
+
+@keyframes InteractiveList-expired02-color {
+    from { background:#fdf0f1; }
+    to { background:#f1878d; }
+}
+
+.InteractiveList-expired03 {
+    animation: InteractiveList-expired03-color infinite 5s linear;
+    border-radius: 10px;
+    box-shadow: 2px 2px 9px 2px #e0dddd;
+}
+
+@keyframes InteractiveList-expired03-color {
+    from { background:#fdf0f1; }
+    to { background:#e63039; }
+}

@@ -163,11 +163,11 @@ class App extends Component {
     this.usersRef.orderByChild('email').equalTo(user.email).on("value", function(snapshot) {
         if (!snapshot.val()) {
             newUserRef = this.usersRef.push({email: user.email, name: user.displayName}, (error) => {
-                if (error) {
-                    console.log('user push failed ', error);
-                } else {
-                    this.setUsersList(newUserRef);
-                }
+              if (error) {
+                  console.log('user push failed ', error);
+              } else {
+                  this.setUsersList(newUserRef);
+              }
             });
         } else if (!this.hasCompleteProfile(snapshot.val())) {
           let loggedInUserRef = this.usersRef.child(Object.keys(snapshot.val())[0]);

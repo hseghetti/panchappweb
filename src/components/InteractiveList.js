@@ -1,3 +1,4 @@
+import './InteractiveList.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -13,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import logo from '../icon.png';
 import _ from 'lodash';
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -57,7 +59,7 @@ class InteractiveList extends React.Component {
 
   renderListItem = (itemData) => {
     return (
-      <ListItem key={itemData._key}>
+      <ListItem key={itemData._key} className={this.getClassNameFromDate(itemData.date)}>
         <ListItemAvatar>
           <Avatar alt="Panched" src={itemData.photoURL || logo}></Avatar>
         </ListItemAvatar>
@@ -82,6 +84,24 @@ class InteractiveList extends React.Component {
     });
 
     return listOfItems;
+  }
+
+  getClassNameFromDate = (date) => {
+    let panchedDate = moment(date);
+    let dateDiff = moment().diff(panchedDate, 'days');
+    let className = '';
+
+    if (dateDiff > 7) {
+      if (dateDiff < 15) {
+        className = 'InteractiveList-expired01';
+      } else if (dateDiff < 22) {
+        className = 'InteractiveList-expired02';
+      } else {
+        className = 'InteractiveList-expired03';
+      }
+    }
+
+    return className;
   }
 }
 
