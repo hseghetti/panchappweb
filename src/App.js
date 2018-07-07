@@ -237,6 +237,10 @@ class App extends Component {
     };
     this.panchosRef.push(pancho);
     this.addActivityRegistry(activityData);
+
+    this.setState({
+      pageToRender: 'panchoListPage'
+    });
   }
 
   removeFromFirebase = (panchoToRemove) => {
