@@ -19,7 +19,8 @@ class App extends Component {
     super(props);
     this.state = {
       panchos: [],
-      pageToRender: 'panchoListPage'
+      pageToRender: 'panchoListPage',
+      group: window.location.pathname.replace(/\//g, '')
     };
 
     this.panchosRef = firebaseApp.database().ref('/panchos/');
@@ -65,7 +66,7 @@ class App extends Component {
   }
 
   renderPachoAddPage = () => {
-    return <PanchoAddPage users={this.state.users} addToFirebase={this.addToFirebase} />;
+    return <PanchoAddPage users={this.state.users} addToFirebase={this.addToFirebase}  group={this.state.group} />;
   }
 
   renderActivityPage = () => {
@@ -99,13 +100,17 @@ class App extends Component {
     panchosRef.orderByKey().on('value', (dataSnapshot) => {
         let items = [];
         dataSnapshot.forEach((child) => {
+          const childVal = child.val();
+
+          if (childVal.group === this.state.group) {
             items.push({
-                date: child.val().date,
-                panchado: child.val().panchado,
-                photoURL: child.val().photoURL,
-                reason: child.val().reason,
-                _key: child.key
+              date: childVal.date,
+              panchado: childVal.panchado,
+              photoURL: childVal.photoURL,
+              reason: childVal.reason,
+              _key: child.key
             });
+          }
         });
 
         this.setState({

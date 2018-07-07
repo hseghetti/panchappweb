@@ -115,7 +115,8 @@ class PanchoAddPage extends Component {
                 panchado: panchedData.name || panchedData.email,
                 photoURL: panchedData.photoURL || '',
                 reason: reason,
-                date: moment().toString()
+                date: moment().toString(),
+                group: this.props.group
             });
 
             this.setState({panched: '', reason: ''});
@@ -169,7 +170,8 @@ const styles = theme => ({
   PanchoAddPage.propTypes = {
     classes: PropTypes.object.isRequired,
     users: PropTypes.array.isRequired,
-    addToFirebase: PropTypes.func.isRequired
+    addToFirebase: PropTypes.func.isRequired,
+    group: PropTypes.string.isRequired
   };
 
 export default withStyles(styles)(PanchoAddPage);
