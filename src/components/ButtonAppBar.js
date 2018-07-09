@@ -33,7 +33,7 @@ class ButtonAppBar extends React.Component {
     }
 
     render() {
-        const { classes, title } = this.props;
+        const { classes, group, title } = this.props;
 
         return (
             <div className={classes.root}>
@@ -41,7 +41,7 @@ class ButtonAppBar extends React.Component {
                 <Toolbar>
                   <MenuOptions onMenuAction={this.onMenuAction} />
                   <Typography variant="title" color="inherit" className={classes.flex}>
-                    {title}
+                    {title + ' - ' + this.getGroupTitle()}
                   </Typography>
                   <Button onClick={this.state.action} color="inherit">{this.state.label}</Button>
                 </Toolbar>
@@ -53,6 +53,10 @@ class ButtonAppBar extends React.Component {
     onMenuAction = (page) => {
         this.props.onMenuAction(page)
     };
+
+    getGroupTitle = () => {
+        return this.props.group || 'ERROR: NO GROUP DEFINED';
+    }
 
     updateLoginStatus = () => {
         loginController.getLoggedInUserData(((userData) => {
@@ -86,6 +90,7 @@ class ButtonAppBar extends React.Component {
 
 ButtonAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
+  group: PropTypes.string,
   title: PropTypes.string.isRequired,
   onLoginAction: PropTypes.func.isRequired
 };

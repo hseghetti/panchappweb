@@ -17,10 +17,11 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    const group = this.getGroupName();
     this.state = {
       panchos: [],
       pageToRender: 'panchoListPage',
-      group: window.location.pathname.replace(/\//g, '')
+      group: group
     };
 
     this.panchosRef = firebaseApp.database().ref('/panchos/');
@@ -83,6 +84,7 @@ class App extends Component {
 
   getAppBarProps = () => {
     return {
+      group: this.state.group,
       title: 'PanchApp',
       onLoginAction: this.loginActionCallback,
       onMenuAction: this.menuActionCallback
@@ -257,6 +259,10 @@ class App extends Component {
 
   addActivityRegistry = (data) => {
     this.activityRef.push(data);
+  }
+
+  getGroupName = () => {
+    return window.location.pathname.replace(/\//g, '').toLowerCase();
   }
 }
 

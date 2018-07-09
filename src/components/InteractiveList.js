@@ -65,7 +65,7 @@ class InteractiveList extends React.Component {
         </ListItemAvatar>
         <ListItemText
           primary={itemData.panchado}
-          secondary={itemData.reason + ' - ' + itemData.date}
+          secondary={itemData.reason + ' --- ' + moment(itemData.date).format('lll')}
         />
         <ListItemSecondaryAction>
           <IconButton aria-label="Delete" onClick={this.props.removePancho.bind(this, itemData)}>
@@ -91,10 +91,10 @@ class InteractiveList extends React.Component {
     let dateDiff = moment().diff(panchedDate, 'days');
     let className = '';
 
-    if (dateDiff > 7) {
-      if (dateDiff < 15) {
+    if (dateDiff > 14) {
+      if (dateDiff < 28) {
         className = 'InteractiveList-expired01';
-      } else if (dateDiff < 22) {
+      } else if (dateDiff < 35) {
         className = 'InteractiveList-expired02';
       } else {
         className = 'InteractiveList-expired03';
