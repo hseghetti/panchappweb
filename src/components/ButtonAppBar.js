@@ -39,7 +39,7 @@ class ButtonAppBar extends React.Component {
             <div className={classes.root}>
               <AppBar position="static">
                 <Toolbar>
-                  <MenuOptions onMenuAction={this.onMenuAction} />
+                  <MenuOptions group={group} onMenuAction={this.onMenuAction} />
                   <Typography variant="title" color="inherit" className={classes.flex}>
                     {title + ' - ' + this.getGroupTitle()}
                   </Typography>

@@ -34,8 +34,10 @@ $(function () {
 
 $(function () {
     $('#groupName').on('keypress', (event)=> {
+        let group = event.target.value || '';
+
         if(event.which === 13) {
-            window.location ='/' + event.target.value + '/';
+            window.location ='/' + group.trim() + '/';
         }
     });
 });
