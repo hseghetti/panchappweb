@@ -37,7 +37,7 @@ $(function () {
         let group = event.target.value || '';
 
         if(event.which === 13) {
-            window.location ='/' + group.trim() + '/';
+            window.location ='/' + group.replace(/ /g, '') + '/';
         }
     });
 });
